@@ -72,8 +72,8 @@ class board():
     def updateScore(self, player, row, col):
         self.updateHorizontal(player, row, col)
         self.updateVertical(player, row, col)
-        self.updateDiagnalL(player, row, col)
-        self.updateDiagnalR(player, row, col)
+        self.updateDiagonalL(player, row, col)
+        self.updateDiagonalR(player, row, col)
         print ""
 
     def updateHorizontal(self, player, row, col):
@@ -86,23 +86,23 @@ class board():
             self.winner = player
         # else:
         vertical = self.scoreTrack[player][row][col][1]
-        diagnalL = self.scoreTrack[player][row][col][2]
-        diagnalR = self.scoreTrack[player][row][col][3]
-        self.scoreTrack[player][row][col] = (tempmax, vertical, diagnalL, diagnalR)
+        diagonalL = self.scoreTrack[player][row][col][2]
+        diagonalR = self.scoreTrack[player][row][col][3]
+        self.scoreTrack[player][row][col] = (tempmax, vertical, diagonalL, diagonalR)
         for i in range(col + 1, 7):
             if self.scoreTrack[player][row][i][0] != 0:
                 vertical = self.scoreTrack[player][row][i][1]
-                diagnalL = self.scoreTrack[player][row][i][2]
-                diagnalR = self.scoreTrack[player][row][i][3]
-                self.scoreTrack[player][row][i] = (tempmax, vertical, diagnalL, diagnalR)
+                diagonalL = self.scoreTrack[player][row][i][2]
+                diagonalR = self.scoreTrack[player][row][i][3]
+                self.scoreTrack[player][row][i] = (tempmax, vertical, diagonalL, diagonalR)
             else:
                 break
         for i in range(col - 1, -1, -1):
             if self.scoreTrack[player][row][i][0] != 0:
                 vertical = self.scoreTrack[player][row][i][1]
-                diagnalL = self.scoreTrack[player][row][i][2]
-                diagnalR = self.scoreTrack[player][row][i][3]
-                self.scoreTrack[player][row][i] = (tempmax, vertical, diagnalL, diagnalR)
+                diagonalL = self.scoreTrack[player][row][i][2]
+                diagonalR = self.scoreTrack[player][row][i][3]
+                self.scoreTrack[player][row][i] = (tempmax, vertical, diagonalL, diagonalR)
             else:
                 break
 
@@ -116,18 +116,18 @@ class board():
             self.winner = player
         # else:
         horizontal = self.scoreTrack[player][row][col][0]
-        diagnalL = self.scoreTrack[player][row][col][2]
-        diagnalR = self.scoreTrack[player][row][col][3]
-        self.scoreTrack[player][row][col] = (horizontal, tempmax, diagnalL, diagnalR)
+        diagonalL = self.scoreTrack[player][row][col][2]
+        diagonalR = self.scoreTrack[player][row][col][3]
+        self.scoreTrack[player][row][col] = (horizontal, tempmax, diagonalL, diagonalR)
         for i in range(row + 1, 6):
             if self.scoreTrack[player][i][col][1] != 0:
                 horizontal = self.scoreTrack[player][i][col][0]
-                diagnalL = self.scoreTrack[player][i][col][2]
-                self.scoreTrack[player][i][col] = (horizontal, tempmax, diagnalL, diagnalR)
+                diagonalL = self.scoreTrack[player][i][col][2]
+                self.scoreTrack[player][i][col] = (horizontal, tempmax, diagonalL, diagonalR)
             else:
                 break
 
-    def updateDiagnalL(self, player, row, col):
+    def updateDiagonalL(self, player, row, col):
         tempmax = 1
         if row - 1 >= 0 and col - 1 >= 0:
             tempmax += self.scoreTrack[player][row - 1][col - 1][2]
@@ -137,26 +137,26 @@ class board():
             self.winner = player
         horizontal = self.scoreTrack[player][row][col][0]
         vertical = self.scoreTrack[player][row][col][1]
-        diagnalR = self.scoreTrack[player][row][col][3]
-        self.scoreTrack[player][row][col] = (horizontal, vertical, tempmax, diagnalR)
+        diagonalR = self.scoreTrack[player][row][col][3]
+        self.scoreTrack[player][row][col] = (horizontal, vertical, tempmax, diagonalR)
         for i, j in zip(range(row - 1, -1, -1), range(col - 1, -1, -1)):
             if self.scoreTrack[player][i][j][2] != 0:
                 horizontal = self.scoreTrack[player][i][j][0]
                 vertical = self.scoreTrack[player][i][j][1]
-                diagnalR = self.scoreTrack[player][i][j][3]
-                self.scoreTrack[player][i][j] = (horizontal, vertical, tempmax, diagnalR)
+                diagonalR = self.scoreTrack[player][i][j][3]
+                self.scoreTrack[player][i][j] = (horizontal, vertical, tempmax, diagonalR)
             else:
                 break
         for i, j in zip(range(row + 1, 6), range(col + 1, 7)):
             if self.scoreTrack[player][i][j][2] != 0:
                 horizontal = self.scoreTrack[player][i][j][0]
                 vertical = self.scoreTrack[player][i][j][1]
-                diagnalR = self.scoreTrack[player][i][j][3]
-                self.scoreTrack[player][i][j] = (horizontal, vertical, tempmax, diagnalR)
+                diagonalR = self.scoreTrack[player][i][j][3]
+                self.scoreTrack[player][i][j] = (horizontal, vertical, tempmax, diagonalR)
             else:
                 break
 
-    def updateDiagnalR(self, player, row, col):
+    def updateDiagonalR(self, player, row, col):
         tempmax = 1
         if row - 1 >= 0 and col + 1 <= 6:
             tempmax += self.scoreTrack[player][row - 1][col + 1][3]
@@ -166,22 +166,22 @@ class board():
             self.winner = player
         horizontal = self.scoreTrack[player][row][col][0]
         vertical = self.scoreTrack[player][row][col][1]
-        diagnalL = self.scoreTrack[player][row][col][2]
-        self.scoreTrack[player][row][col] = (horizontal, vertical, diagnalL, tempmax)
+        diagonalL = self.scoreTrack[player][row][col][2]
+        self.scoreTrack[player][row][col] = (horizontal, vertical, diagonalL, tempmax)
         for i, j in zip(range(row - 1, -1, -1), range(col + 1, 7)):
             if self.scoreTrack[player][i][j][2] != 0:
                 horizontal = self.scoreTrack[player][i][j][0]
                 vertical = self.scoreTrack[player][i][j][1]
-                diagnalL = self.scoreTrack[player][i][j][2]
-                self.scoreTrack[player][i][j] = (horizontal, vertical, diagnalL, tempmax)
+                diagonalL = self.scoreTrack[player][i][j][2]
+                self.scoreTrack[player][i][j] = (horizontal, vertical, diagonalL, tempmax)
             else:
                 break
         for i, j in zip(range(row + 1, 6), range(col - 1, -1, -1)):
             if self.scoreTrack[player][i][j][2] != 0:
                 horizontal = self.scoreTrack[player][i][j][0]
                 vertical = self.scoreTrack[player][i][j][1]
-                diagnalL = self.scoreTrack[player][i][j][2]
-                self.scoreTrack[player][i][j] = (horizontal, vertical, diagnalL, tempmax)
+                diagonalL = self.scoreTrack[player][i][j][2]
+                self.scoreTrack[player][i][j] = (horizontal, vertical, diagonalL, tempmax)
             else:
                 break
 
