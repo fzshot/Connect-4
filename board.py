@@ -57,13 +57,13 @@ class board():
         return place
 
     def isEnd(self):
-        result = False
         if self.winner is not None:
+            result =True
+        else:
             for place in self.board[0]:
-                if place != " ":
-                    result |= False
-                else:
-                    result |= True
+                if place == " ":
+                    return False
+            result = True
         return result
 
     def getWinner(self):
