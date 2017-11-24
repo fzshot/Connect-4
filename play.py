@@ -1,5 +1,5 @@
 from board import *
-
+from ai import *
 
 def main():
     game = board()
@@ -9,15 +9,12 @@ def main():
     #           6, 7, 7, 7, 7, 7, 7]
     while True:
         game.printBoard()
-        position = raw_input("Enter the position for " + game.getTurn() + ": ")
+        if game.getTurn() == "X":
+            position = Human.play()
+        else:
+            position = RandomAgent().play()
 
-        if position == "q":
-            break
         game = game.dropDisc(int(position))
-        # try:
-        #     game.dropDisc(int(position))
-        # except Exception:
-        #     print "Something Wrong"
         # i=i+1
         if game.isEnd():
             if game.getWinner() is not None:
@@ -32,3 +29,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
