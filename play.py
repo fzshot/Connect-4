@@ -3,6 +3,8 @@ from ai import *
 
 def main():
     game = board()
+    humanagent = Human()
+    randomagent = RandomAgent()
     # i =0
     # Inputs to Tie:
     # inputs = [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 5, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6,
@@ -10,9 +12,9 @@ def main():
     while True:
         game.printBoard()
         if game.getTurn() == "X":
-            position = Human.play()
+            position = humanagent.play()
         else:
-            position = RandomAgent().play()
+            position = randomagent.play()
 
         game = game.dropDisc(int(position))
         # i=i+1
