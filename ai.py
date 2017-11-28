@@ -24,9 +24,6 @@ class MinimaxAlphaBetaAgent():
         self.depth = depth
 
     def getAction(self, gameState):
-        """
-          Returns the minimax action using self.depth and self.evaluationFunction
-        """
 
         def maxValue(state, a, b, depth):
             if state.isEnd() or depth == self.depth:
@@ -69,7 +66,7 @@ class MinimaxAlphaBetaAgent():
 
     def getNewState(self, gameState):
         posisions = self.getAction(gameState)
-        print "Agent: inserted at", posisions
+        print "Minimax AB Agent: inserted at", posisions
         return posisions
 
     def evalFunc(self, gameState, player=None):
@@ -132,7 +129,7 @@ class MinimaxAgent():
 
     def getNewState(self, gameState):
         posisions = self.getAction(gameState)
-        print "Agent: inserted at", posisions
+        print "Minimax Agent: inserted at", posisions
         return posisions
 
     def evalFunc(self, gameState, player=None):
