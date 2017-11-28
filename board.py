@@ -58,7 +58,7 @@ class board():
 
     def isEnd(self):
         if self.winner is not None:
-            result =True
+            result = True
         else:
             for place in self.board[0]:
                 if place == " ":
@@ -74,7 +74,7 @@ class board():
         self.updateVertical(player, row, col)
         self.updateDiagonalL(player, row, col)
         self.updateDiagonalR(player, row, col)
-        print ""
+        # print ""
 
     def updateHorizontal(self, player, row, col):
         tempmax = 1
@@ -123,6 +123,7 @@ class board():
             if self.scoreTrack[player][i][col][1] != 0:
                 horizontal = self.scoreTrack[player][i][col][0]
                 diagonalL = self.scoreTrack[player][i][col][2]
+                diagonalR = self.scoreTrack[player][i][col][3]
                 self.scoreTrack[player][i][col] = (horizontal, tempmax, diagonalL, diagonalR)
             else:
                 break
@@ -169,7 +170,7 @@ class board():
         diagonalL = self.scoreTrack[player][row][col][2]
         self.scoreTrack[player][row][col] = (horizontal, vertical, diagonalL, tempmax)
         for i, j in zip(range(row - 1, -1, -1), range(col + 1, 7)):
-            if self.scoreTrack[player][i][j][2] != 0:
+            if self.scoreTrack[player][i][j][3] != 0:
                 horizontal = self.scoreTrack[player][i][j][0]
                 vertical = self.scoreTrack[player][i][j][1]
                 diagonalL = self.scoreTrack[player][i][j][2]
@@ -177,7 +178,7 @@ class board():
             else:
                 break
         for i, j in zip(range(row + 1, 6), range(col - 1, -1, -1)):
-            if self.scoreTrack[player][i][j][2] != 0:
+            if self.scoreTrack[player][i][j][3] != 0:
                 horizontal = self.scoreTrack[player][i][j][0]
                 vertical = self.scoreTrack[player][i][j][1]
                 diagonalL = self.scoreTrack[player][i][j][2]
