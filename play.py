@@ -1,21 +1,26 @@
 from board import *
 from ai import *
 
+globalCounter = 0
+
+
 def main():
     game = board()
     humanagent = Human()
     randomagent = RandomAgent()
+    alphBetaMinimax = MinimaxAlphaBetaAgent(3)
+    minimax = MinimaxAgent()
     # i =0
     # Inputs to Tie:
     # inputs = [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 5, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6,
     #           6, 7, 7, 7, 7, 7, 7]
     while True:
         game.printBoard()
-        if game.getTurn() == "X":
-            position = humanagent.play()
-        else:
+        if game.getTurn() == "O":
             position = randomagent.play()
-
+        else:
+            position = alphBetaMinimax.getNewState(game)
+            # position = randomagent.play()
         game = game.dropDisc(int(position))
         # i=i+1
         if game.isEnd():
@@ -29,6 +34,34 @@ def main():
     print "Good Bye"
 
 
-if __name__ == "__main__":
-    main()
+def countWinRate():
+    global globalCounter
+    game = board()
+    humanagent = Human()
+    randomagent = RandomAgent()
+    alphBetaMinimax = MinimaxAlphaBetaAgent(3)
+    minimax = MinimaxAgent()
+    while True:
+        if game.getTurn() == "X":
+            position = randomagent.play()
+        else:
+            position = alphBetaMinimax.getNewState(game)
 
+        game = game.dropDisc(int(position))
+        if game.isEnd():
+            if game.getWinner() is not None:
+                if game.getWinner() == "O":
+                    globalCounter += 1
+                    return "Win"
+                elif game.getWinner() == "X":
+                    return "Loss"
+                else:
+                    return "Tied"
+            break
+
+
+if __name__ == "__main__":
+    for i in range(1, 11):
+        print str(i) + " " + countWinRate()
+    print globalCounter / 10.0
+    # main()
