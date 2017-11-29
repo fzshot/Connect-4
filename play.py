@@ -8,7 +8,7 @@ def main():
     game = board()
     humanagent = Human()
     randomagent = RandomAgent()
-    alphBetaMinimax = MinimaxAlphaBetaAgent(3)
+    alphBetaMinimax = MinimaxAlphaBetaAgent()
     minimax = MinimaxAgent()
     # i =0
     # Inputs to Tie:
@@ -16,21 +16,24 @@ def main():
     #           6, 7, 7, 7, 7, 7, 7]
     while True:
         game.printBoard()
-        if game.getTurn() == "O":
-            position = randomagent.play()
+        if game.getTurn() == "X":
+            position = humanagent.play()
         else:
             position = alphBetaMinimax.getNewState(game)
-            # position = randomagent.play()
-        game = game.dropDisc(int(position))
-        # i=i+1
-        if game.isEnd():
-            if game.getWinner() is not None:
-                game.printBoard()
-                print "Winner is: ", game.getWinner()
-            else:
-                game.printBoard()
-                print "Game Tied! No Winner"
-            break
+        try:
+            game = game.dropDisc(int(position))
+        except Exception:
+            pass
+        else:
+            # i=i+1
+            if game.isEnd():
+                if game.getWinner() is not None:
+                    game.printBoard()
+                    print "Winner is: ", game.getWinner()
+                else:
+                    game.printBoard()
+                    print "Game Tied! No Winner"
+                break
     print "Good Bye"
 
 
@@ -39,11 +42,11 @@ def countWinRate():
     game = board()
     humanagent = Human()
     randomagent = RandomAgent()
-    alphBetaMinimax = MinimaxAlphaBetaAgent(3)
+    alphBetaMinimax = MinimaxAlphaBetaAgent()
     minimax = MinimaxAgent()
     while True:
         if game.getTurn() == "X":
-            position = randomagent.play()
+            position = minimax.getNewState(game)
         else:
             position = alphBetaMinimax.getNewState(game)
 

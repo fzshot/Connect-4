@@ -70,21 +70,43 @@ class MinimaxAlphaBetaAgent():
         return posisions
 
     def evalFunc(self, gameState, player=None):
+        weightMatrix = [[3, 4, 5, 7, 5, 4, 3],
+                        [4, 6, 8, 10, 8, 6, 4],
+                        [5, 8, 11, 13, 11, 8, 5],
+                        [5, 8, 11, 13, 11, 8, 5],
+                        [4, 6, 8, 10, 8, 6, 4],
+                        [3, 4, 5, 7, 5, 4, 3]]
         if gameState.winner == "X":
-            return -1000
+            return float('-inf')
         elif gameState.winner == "O":
-            return 1000
+            return float('inf')
         else:
-            # scoreX, scoreO = 0, 0
-            # for x, o in zip(gameState.scoreTrack["X"], gameState.scoreTrack["O"]):
-            #     for xx, oo in zip(x, o):
-            #         scoreX = max(max(xx), scoreX)
-            #         scoreO = max(max(oo), scoreO)
-            # if scoreX >= 3:
-            #     return -99999
-            # else:
-            #     return scoreO - scoreX - random()
-            return SystemRandom().random()
+            scoreX, scoreO = 0, 0
+            j = 0
+            for x, o in zip(gameState.scoreTrack["X"], gameState.scoreTrack["O"]):
+                i = 0
+                for xx, oo in zip(x, o):
+                    max_xx, max_oo = max(xx), max(oo)
+                    if max_xx == 0:
+                        pass
+                    elif max_xx == 1:
+                        scoreX += 1 * weightMatrix[j][i]
+                    elif max_xx == 2:
+                        scoreX += 10 * weightMatrix[j][i]
+                    else:
+                        scoreX += 100 * weightMatrix[j][i]
+                    if max_oo == 0:
+                        pass
+                    elif max_oo == 1:
+                        scoreO += 1 * weightMatrix[j][i]
+                    elif max_oo == 2:
+                        scoreO += 10 * weightMatrix[j][i]
+                    else:
+                        scoreO += 100 * weightMatrix[j][i]
+                    i += 1
+                j += 1
+            return scoreO - scoreX
+            # return SystemRandom().random()
 
 
 class MinimaxAgent():
@@ -133,17 +155,39 @@ class MinimaxAgent():
         return posisions
 
     def evalFunc(self, gameState, player=None):
+        weightMatrix = [[3, 4, 5, 7, 5, 4, 3],
+                        [4, 6, 8, 10, 8, 6, 4],
+                        [5, 8, 11, 13, 11, 8, 5],
+                        [5, 8, 11, 13, 11, 8, 5],
+                        [4, 6, 8, 10, 8, 6, 4],
+                        [3, 4, 5, 7, 5, 4, 3]]
         if gameState.winner == "X":
-            return -1000
+            return float('inf')
         elif gameState.winner == "O":
-            return 1000
+            return float('-inf')
         else:
-            # scoreX, scoreO = 0, 0
-            # for x, o in zip(gameState.scoreTrack["X"], gameState.scoreTrack["O"]):
-            #     for xx, oo in zip(x, o):
-            #         scoreX += sum(xx)
-            #         scoreO += sum(oo)
-            # scoreX, scoreO = scoreX / 3.0, scoreO / 3.0
-            # scoreX = math.floor(scoreX) * 10.0 + (scoreX - math.floor(scoreX)) * 2.0
-            # scoreO = math.floor(scoreO) * 10.0 + (scoreO - math.floor(scoreO)) * 2.0
-            return SystemRandom().random()
+            scoreX, scoreO = 0, 0
+            j = 0
+            for x, o in zip(gameState.scoreTrack["X"], gameState.scoreTrack["O"]):
+                i = 0
+                for xx, oo in zip(x, o):
+                    max_xx, max_oo = max(xx), max(oo)
+                    if max_xx == 0:
+                        pass
+                    elif max_xx == 1:
+                        scoreX += 1 * weightMatrix[j][i]
+                    elif max_xx == 2:
+                        scoreX += 10 * weightMatrix[j][i]
+                    else:
+                        scoreX += 100 * weightMatrix[j][i]
+                    if max_oo == 0:
+                        pass
+                    elif max_oo == 1:
+                        scoreO += 1 * weightMatrix[j][i]
+                    elif max_oo == 2:
+                        scoreO += 10 * weightMatrix[j][i]
+                    else:
+                        scoreO += 100 * weightMatrix[j][i]
+                    i += 1
+                j += 1
+            return scoreO - scoreX
