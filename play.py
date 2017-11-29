@@ -36,7 +36,7 @@ def main():
                 break
     print "Good Bye"
 
-
+# rtr
 def countWinRate():
     global globalCounter
     game = board()
