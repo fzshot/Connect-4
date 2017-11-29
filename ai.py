@@ -1,17 +1,24 @@
-from random import randrange, choice, random, SystemRandom
-import math
+from random import randrange
+from board import *
+from evaluation import Evaluation
 
 
-class Human():
+class Human:
     """Keyboard Agent"""
 
+    def __init__(self):
+        pass
+
     def play(self):
-        position = raw_input("Enter the position for " + "X" + ": ")
+        position = raw_input("Enter the position for " + "O" + ": ")
         return position
 
 
-class RandomAgent():
+class RandomAgent:
     """This strategy plays in an random column."""
+
+    def __init__(self, game):
+        self.game = game
 
     def play(self):
         position = randrange(1, 7)
@@ -19,175 +26,227 @@ class RandomAgent():
         return position
 
 
-class MinimaxAlphaBetaAgent():
-    def __init__(self, depth=2):
+class MinMaxAgent:
+
+    def __init__(self, gameState, depth):
+        self.gameState = gameState
         self.depth = depth
+        self.turn = gameState.getTurn()
+        self.opponent = gameState.getOpponent()
 
-    def getAction(self, gameState):
+    def play(self):
+        position = self.value(self.gameState, self.turn, self.depth)[1]
+        print "MinMax Agent Drops in ", position
+        return position
 
-        def maxValue(state, a, b, depth):
-            if state.isEnd() or depth == self.depth:
-                return self.evalFunc(state)
-            v = float('-inf')
-            for action in state.possiblePlace():
-                nextState = state.dropDisc(action)
-                score = minValue(nextState, a, b, depth + 1)
-                v = max(v, score)
-                if v > b:
-                    return v
-                a = max(a, v)
-            return v
-
-        def minValue(state, a, b, depth):
-            if state.isEnd():
-                return self.evalFunc(state)
-            v = float('inf')
-            for action in state.possiblePlace():
-                nextState = state.dropDisc(action)
-                v = min(v, maxValue(nextState, a, b, depth))
-                if v < a:
-                    return v
-                b = min(b, v)
-            return v
-
-        a = float('-inf')
-        b = float('inf')
-        v = float('-inf')
-        move = dict()
-        for action in gameState.possiblePlace():
-            nextState = gameState.dropDisc(action)
-            score = minValue(nextState, a, b, 1)
-            v = max(v, score)
-            move[score] = action
-            if v > b:
-                return move[v]
-            a = max(a, v)
-        return move[v]
-
-    def getNewState(self, gameState):
-        posisions = self.getAction(gameState)
-        print "Minimax AB Agent: inserted at", posisions
-        return posisions
-
-    def evalFunc(self, gameState, player=None):
-        weightMatrix = [[3, 4, 5, 7, 5, 4, 3],
-                        [4, 6, 8, 10, 8, 6, 4],
-                        [5, 8, 11, 13, 11, 8, 5],
-                        [5, 8, 11, 13, 11, 8, 5],
-                        [4, 6, 8, 10, 8, 6, 4],
-                        [3, 4, 5, 7, 5, 4, 3]]
-        if gameState.winner == "X":
-            return float('-inf')
-        elif gameState.winner == "O":
-            return float('inf')
+    def value(self, gameState, turn, depth):
+        if gameState.isEnd() or depth == 0:
+            return Evaluation().evaluationFunction(gameState, turn), "None"
+        if turn == self.turn:
+            return self.max_value(gameState, turn, depth)
         else:
-            scoreX, scoreO = 0, 0
-            j = 0
-            for x, o in zip(gameState.scoreTrack["X"], gameState.scoreTrack["O"]):
-                i = 0
-                for xx, oo in zip(x, o):
-                    max_xx, max_oo = max(xx), max(oo)
-                    if max_xx == 0:
-                        pass
-                    elif max_xx == 1:
-                        scoreX += 1 * weightMatrix[j][i]
-                    elif max_xx == 2:
-                        scoreX += 10 * weightMatrix[j][i]
-                    else:
-                        scoreX += 100 * weightMatrix[j][i]
-                    if max_oo == 0:
-                        pass
-                    elif max_oo == 1:
-                        scoreO += 1 * weightMatrix[j][i]
-                    elif max_oo == 2:
-                        scoreO += 10 * weightMatrix[j][i]
-                    else:
-                        scoreO += 100 * weightMatrix[j][i]
-                    i += 1
-                j += 1
-            return scoreO - scoreX
-            # return SystemRandom().random()
+            return self.min_value(gameState, turn, depth)
+
+    def max_value(self, gameState, turn, depth):
+
+        v = -float("inf")
+        BestState = 0
+        actions = gameState.possiblePlace()
+        successorStates = []
+        if turn is "X":
+            opponent = "O"
+        else:
+            opponent = "X"
+        # Generating successor states for each legal action.
+        for action in actions:
+            successorStates.append(gameState.generateSuccessor(turn, action))
+
+        # Loop to check the maxima for each successor state.
+        i = 0
+        for successorState in successorStates:
+
+            if v < self.value(successorState, opponent, depth)[0]:
+                BestState = i
+                v = self.value(successorState, opponent, depth)[0]
+            i += 1
+
+        # return evaluation value of the chosen successor node ,
+        # and the action associated to get to that successor state.
+        return v, actions[BestState]
+
+    def min_value(self, gameState, turn, depth):
+
+        v = float("inf")
+        BestState = 0
+        successorStates = []
+        actions = gameState.possiblePlace()
+        if turn is "X":
+            opponent = "O"
+        else:
+            opponent = "X"
+
+        # Generating successor states for each legal action.
+        for action in actions:
+            successorStates.append(gameState.generateSuccessor(turn, action))
+        i = 0
+        # Loop to check the minima for each successor state.
+        for successorState in successorStates:
+
+            if v > self.value(successorState, opponent, depth-1)[0]:
+                BestState = i
+                v = self.value(successorState, opponent, depth-1)[0]
+            i += 1
+
+        # return evaluation value of the chosen successor node ,
+        # and the action associated to get to that successor state.
+        return v, actions[BestState]
 
 
-class MinimaxAgent():
-    def __init__(self, depth=2):
+class AlphaBeta:
+
+    def __init__(self, gameState, depth):
+        self.gameState = gameState
         self.depth = depth
+        self.turn = gameState.getTurn()
+        self.opponent = gameState.getOpponent()
 
-    def getAction(self, gameState):
+    def play(self):
+        alpha = -float('inf')
+        beta = float('inf')
+        position = self.value(self.gameState, self.turn, self.depth, alpha, beta)[1]
+        print "AlphaBeta Agent Drops in ", position
+        return position
 
-        def minimax(state, depth):
-            move = dict()
-            score = float('-inf')
-            for action in state.possiblePlace():
-                nextState = state.dropDisc(action)
-                minScore = minValue(nextState, depth)
-                score = max(score, minScore)
-                move[minScore] = action
-            return move[score]
+    def value(self, gameState, turn, depth, alpha, beta):
+        if gameState.isEnd() or depth == 0:
+            return Evaluation().evaluationFunction(gameState, turn), "None"
 
-        def maxValue(state, depth):
-            if state.isEnd() or depth == self.depth:
-                score = self.evalFunc(state)
-                return score
-            v = float('-inf')
-            for action in state.possiblePlace():
-                nextState = state.dropDisc(action)
-                score = minValue(nextState, depth + 1)
-                v = max(v, score)
-            return v
-
-        def minValue(state, depth):
-            if state.isEnd():
-                score = self.evalFunc(state)
-                return score
-            v = float('inf')
-            for action in state.possiblePlace():
-                nextState = state.dropDisc(action)
-                score = maxValue(nextState, depth)
-                v = min(v, score)
-            return v
-
-        return minimax(gameState, 1)
-
-    def getNewState(self, gameState):
-        posisions = self.getAction(gameState)
-        print "Minimax Agent: inserted at", posisions
-        return posisions
-
-    def evalFunc(self, gameState, player=None):
-        weightMatrix = [[3, 4, 5, 7, 5, 4, 3],
-                        [4, 6, 8, 10, 8, 6, 4],
-                        [5, 8, 11, 13, 11, 8, 5],
-                        [5, 8, 11, 13, 11, 8, 5],
-                        [4, 6, 8, 10, 8, 6, 4],
-                        [3, 4, 5, 7, 5, 4, 3]]
-        if gameState.winner == "X":
-            return float('inf')
-        elif gameState.winner == "O":
-            return float('-inf')
+        if turn == self.turn:
+            return self.max_value(gameState, turn, depth, alpha, beta)
         else:
-            scoreX, scoreO = 0, 0
-            j = 0
-            for x, o in zip(gameState.scoreTrack["X"], gameState.scoreTrack["O"]):
-                i = 0
-                for xx, oo in zip(x, o):
-                    max_xx, max_oo = max(xx), max(oo)
-                    if max_xx == 0:
-                        pass
-                    elif max_xx == 1:
-                        scoreX += 1 * weightMatrix[j][i]
-                    elif max_xx == 2:
-                        scoreX += 10 * weightMatrix[j][i]
-                    else:
-                        scoreX += 100 * weightMatrix[j][i]
-                    if max_oo == 0:
-                        pass
-                    elif max_oo == 1:
-                        scoreO += 1 * weightMatrix[j][i]
-                    elif max_oo == 2:
-                        scoreO += 10 * weightMatrix[j][i]
-                    else:
-                        scoreO += 100 * weightMatrix[j][i]
-                    i += 1
-                j += 1
-            return scoreO - scoreX
+            return self.min_value(gameState, turn, depth, alpha, beta)
+
+    def max_value(self, gameState, turn, depth, alpha, beta):
+
+        v = -float("inf")
+        bestScore = -float('inf')
+
+        actions = gameState.possiblePlace()
+        if turn is "X":
+            opponent = "O"
+        else:
+            opponent = "X"
+
+        for action in actions:
+            successorState = gameState.generateSuccessor(turn, action)
+            v = max(v, self.value(successorState, opponent, depth, alpha, beta)[0])
+            if v > beta:
+                return v, action
+            alpha = max(alpha, v)
+
+            if v > bestScore:
+                bestScore = v
+                bestAction = action
+
+        return bestScore, bestAction
+
+    def min_value(self, gameState, turn, depth, alpha, beta):
+
+        v = float('inf')
+        bestScore = float('inf')
+
+        actions = gameState.possiblePlace()
+        if turn is "X":
+            opponent = "O"
+        else:
+            opponent = "X"
+
+        for action in actions:
+            successorState = gameState.generateSuccessor(turn, action)
+            v = min(v, self.value(successorState, opponent, depth - 1, alpha, beta)[0])
+
+            if v < alpha:
+                return v, action
+            beta = min(beta, v)
+
+            if bestScore > v:
+                bestScore = v
+                bestAction = action
+
+        return bestScore, bestAction
+
+
+class ExpectimaxAgent:
+    """
+    expectimax agent
+
+    """
+    def __init__(self, gameState, depth):
+        self.gameState = gameState
+        self.depth = depth
+        self.turn = gameState.getTurn()
+        self.opponent = gameState.getOpponent()
+
+
+    def play(self):
+        """
+          Returns the expectimax action using self.depth and self.evaluationFunction
+        """
+        "*** YOUR CODE HERE ***"
+
+        return self.value(self.gameState, self.turn, self.depth)[1]
+
+    def value(self, gameState, turn, depth):
+        if gameState.isEnd() or depth == 0:
+            return Evaluation().evaluationFunction(gameState, turn), "None"
+        if self.turn == turn:
+            return self.max_value(gameState, turn, depth)
+        else:
+            return self.exp_value(gameState, turn, depth)
+
+    def max_value(self, gameState, turn, depth):
+
+        v = -float("inf")
+        actions = gameState.possiblePlace()
+        successorStates = []
+
+        # Generating successor states for each legal action.
+        for action in actions:
+            successorStates.append(gameState.generateSuccessor(turn, action))
+
+        if turn == "X": turn = "Y"
+        else: turn = "X"
+        # Loop to check the maxima for each successor state.
+        i = 0
+        for successorState in successorStates:
+
+            if v < self.value(successorState, turn, depth)[0]:
+                BestState = i
+                v = self.value(successorState, turn, depth)[0]
+            i += 1
+
+        # return evaluation value of the chosen successor node ,
+        # and the action associated to get to that successor state.
+        return v, actions[BestState]
+
+    def exp_value(self, gameState, turn, depth):
+        evals = []
+        successorStates = []
+        actions = gameState.possiblePlace()
+        if turn == "X": turn = "Y"
+        else: turn = "X"
+
+        # Generating successor states for each legal action.
+        for action in actions:
+            successorStates.append(gameState.generateSuccessor(turn, action))
+
+            # Loop to check the minima for each successor state.
+        for successorState in successorStates:
+            evals.append(self.value(successorState, self.turn, depth - 1)[0])
+            #BestState = i
+            #v = self.value(successorState, 0, depth - 1)[0]
+            #i += 1
+
+        # return evaluation value of the chosen successor node ,
+        # and the action associated to get to that successor state.
+        return float(sum(evals)/len(evals)), 'none'
