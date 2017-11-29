@@ -22,6 +22,7 @@ class RandomAgent():
 class MinimaxAlphaBetaAgent():
     def __init__(self, depth=2):
         self.depth = depth
+        self.begin = True
 
     def getAction(self, gameState):
 
@@ -65,7 +66,11 @@ class MinimaxAlphaBetaAgent():
         return move[v]
 
     def getNewState(self, gameState):
-        posisions = self.getAction(gameState)
+        if self.begin:
+            posisions = 4
+            self.begin = False
+        else:
+            posisions = self.getAction(gameState)
         print "Minimax AB Agent: inserted at", posisions
         return posisions
 
