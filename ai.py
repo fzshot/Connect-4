@@ -10,7 +10,7 @@ class Human:
         pass
 
     def play(self):
-        position = raw_input("Enter the position for " + "O" + ": ")
+        position = raw_input("Enter the position for " + "X" + ": ")
         return position
 
 
@@ -21,7 +21,7 @@ class RandomAgent:
         self.game = game
 
     def play(self):
-        position = randrange(1, 7)
+        position = randrange(1, 8)
         print "Random Agent: inserted at", position
         return position
 
@@ -120,7 +120,6 @@ class AlphaBeta:
     def value(self, gameState, turn, depth, alpha, beta):
         if gameState.isEnd() or depth == 0:
             return Evaluation().evaluationFunction(gameState, turn), "None"
-
         if turn == self.turn:
             return self.max_value(gameState, turn, depth, alpha, beta)
         else:
@@ -176,6 +175,7 @@ class AlphaBeta:
         return bestScore, bestAction
 
 
+
 class ExpectimaxAgent:
     """
     expectimax agent
@@ -192,9 +192,10 @@ class ExpectimaxAgent:
         """
           Returns the expectimax action using self.depth and self.evaluationFunction
         """
-        "*** YOUR CODE HERE ***"
 
-        return self.value(self.gameState, self.turn, self.depth)[1]
+        position = self.value(self.gameState, self.turn, self.depth)[1]
+        print "Expectimax Agent Drops in ", position
+        return position
 
     def value(self, gameState, turn, depth):
         if gameState.isEnd() or depth == 0:
@@ -249,4 +250,4 @@ class ExpectimaxAgent:
 
         # return evaluation value of the chosen successor node ,
         # and the action associated to get to that successor state.
-        return float(sum(evals)/len(evals)), 'none'
+        return float(sum(evals)/len(evals)), 'None'
