@@ -8,7 +8,7 @@ def main():
     game = board()
     humanagent = Human()
     randomagent = RandomAgent()
-    alphBetaMinimax = MinimaxAlphaBetaAgent()
+    alphBetaMinimax = MinimaxAlphaBetaAgent(3)
     minimax = MinimaxAgent()
     # i =0
     # Inputs to Tie:

@@ -20,19 +20,20 @@ class RandomAgent():
 
 
 class GeneralAgents():
-    def __init__(self):
+    def __init__(self, version):
+        self.name = version
         try:
-            self.save = self.load_obj()
+            self.save = self.load_obj(version)
         except Exception:
             self.save = dict()
 
     # https://stackoverflow.com/questions/19201290/how-to-save-a-dictionary-to-a-file
     def save_obj(self):
-        with open("save.pkl", "wb+") as f:
+        with open("save" + self.name + ".pkl", "wb+") as f:
             pickle.dump(self.save, f, pickle.HIGHEST_PROTOCOL)
 
-    def load_obj(self):
-        with open("save.pkl", "rb") as f:
+    def load_obj(self, version):
+        with open("save" + version + ".pkl", "rb") as f:
             return pickle.load(f)
 
 
@@ -40,8 +41,8 @@ class MinimaxAlphaBetaAgent(GeneralAgents):
     def __init__(self, depth=2):
         self.depth = depth
         self.begin = True
-        GeneralAgents.__init__(self)
-        self.save = GeneralAgents().save
+        GeneralAgents.__init__(self, "AB" + str(depth))
+        self.save = GeneralAgents("AB" + str(depth)).save
         # print ""
 
     def getAction(self, gameState):
@@ -142,8 +143,9 @@ class MinimaxAgent(GeneralAgents):
     def __init__(self, depth=2):
         self.depth = depth
         self.begin = True
-        GeneralAgents.__init__(self)
-        self.save = GeneralAgents().save
+        GeneralAgents.__init__(self, "minimax" + str(depth))
+        self.save = GeneralAgents("minimax" + str(depth)).save
+        # print ""
 
     def getAction(self, gameState):
 
