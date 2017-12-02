@@ -29,9 +29,8 @@ def main():
             if game.isEnd():
                 if game.getWinner() is not None:
                     game.printBoard()
+                    alphBetaMinimax.save_obj()
                     print "Winner is: ", game.getWinner()
-                    if game.getWinner() == "O":
-                        alphBetaMinimax.save_obj()
                 else:
                     game.printBoard()
                     print "Game Tied! No Winner"
@@ -55,9 +54,9 @@ def countWinRate():
         game = game.dropDisc(int(position))
         if game.isEnd():
             if game.getWinner() is not None:
+                alphBetaMinimax.save_obj()
                 if game.getWinner() == "O":
                     globalCounter += 1
-                    alphBetaMinimax.save_obj()
                     return "Win"
                 elif game.getWinner() == "X":
                     return "Loss"
