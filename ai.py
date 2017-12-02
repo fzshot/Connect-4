@@ -1,5 +1,5 @@
-from random import randrange, choice, random, SystemRandom
-import math
+from random import randrange
+import pickle
 
 
 class Human():
@@ -19,13 +19,32 @@ class RandomAgent():
         return position
 
 
-class MinimaxAlphaBetaAgent():
+class GeneralAgents():
+    def __init__(self):
+        try:
+            self.save = self.load_obj()
+        except Exception:
+            self.save = dict()
+
+    # https://stackoverflow.com/questions/19201290/how-to-save-a-dictionary-to-a-file
+    def save_obj(self):
+        with open("save.pkl", "wb+") as f:
+            pickle.dump(self.save, f, pickle.HIGHEST_PROTOCOL)
+
+    def load_obj(self):
+        with open("save.pkl", "rb") as f:
+            return pickle.load(f)
+
+
+class MinimaxAlphaBetaAgent(GeneralAgents):
     def __init__(self, depth=2):
         self.depth = depth
         self.begin = True
+        GeneralAgents.__init__(self)
+        self.save = GeneralAgents().save
+        # print ""
 
     def getAction(self, gameState):
-
         def maxValue(state, a, b, depth):
             if state.isEnd() or depth == self.depth:
                 return self.evalFunc(state)
@@ -51,19 +70,24 @@ class MinimaxAlphaBetaAgent():
                 b = min(b, v)
             return v
 
-        a = float('-inf')
-        b = float('inf')
-        v = float('-inf')
-        move = dict()
-        for action in gameState.possiblePlace():
-            nextState = gameState.dropDisc(action)
-            score = minValue(nextState, a, b, 1)
-            v = max(v, score)
-            move[score] = action
-            if v > b:
-                return move[v]
-            a = max(a, v)
-        return move[v]
+        currentBoard = gameState.drawBoard
+        if currentBoard in self.save:
+            return self.save[currentBoard]
+        else:
+            a = float('-inf')
+            b = float('inf')
+            v = float('-inf')
+            move = dict()
+            for action in gameState.possiblePlace():
+                nextState = gameState.dropDisc(action)
+                score = minValue(nextState, a, b, 1)
+                v = max(v, score)
+                move[score] = action
+                if v > b:
+                    return move[v]
+                a = max(a, v)
+            self.save[currentBoard] = move[v]
+            return move[v]
 
     def getNewState(self, gameState):
         if self.begin:
@@ -114,9 +138,12 @@ class MinimaxAlphaBetaAgent():
             # return SystemRandom().random()
 
 
-class MinimaxAgent():
+class MinimaxAgent(GeneralAgents):
     def __init__(self, depth=2):
         self.depth = depth
+        self.begin = True
+        GeneralAgents.__init__(self)
+        self.save = GeneralAgents().save
 
     def getAction(self, gameState):
 
@@ -152,11 +179,19 @@ class MinimaxAgent():
                 v = min(v, score)
             return v
 
-        return minimax(gameState, 1)
+        currentBoard = gameState.drawBoard
+        if currentBoard in self.save:
+            return self.save[currentBoard]
+        else:
+            return minimax(gameState, 1)
 
     def getNewState(self, gameState):
-        posisions = self.getAction(gameState)
-        print "Minimax Agent: inserted at", posisions
+        if self.begin:
+            posisions = 4
+            self.begin = False
+        else:
+            posisions = self.getAction(gameState)
+            print "Minimax Agent: inserted at", posisions
         return posisions
 
     def evalFunc(self, gameState, player=None):

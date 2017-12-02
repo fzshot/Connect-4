@@ -17,7 +17,7 @@ def main():
     while True:
         game.printBoard()
         if game.getTurn() == "X":
-            position = humanagent.play()
+            position = randomagent.play()
         else:
             position = alphBetaMinimax.getNewState(game)
         try:
@@ -33,6 +33,7 @@ def main():
                 else:
                     game.printBoard()
                     print "Game Tied! No Winner"
+                alphBetaMinimax.save_obj()
                 break
     print "Good Bye"
 
@@ -42,17 +43,18 @@ def countWinRate():
     game = board()
     humanagent = Human()
     randomagent = RandomAgent()
-    alphBetaMinimax = MinimaxAlphaBetaAgent()
+    alphBetaMinimax = MinimaxAlphaBetaAgent(3)
     minimax = MinimaxAgent()
     while True:
         if game.getTurn() == "X":
-            position = minimax.getNewState(game)
+            position = randomagent.play()
         else:
             position = alphBetaMinimax.getNewState(game)
 
         game = game.dropDisc(int(position))
         if game.isEnd():
             if game.getWinner() is not None:
+                alphBetaMinimax.save_obj()
                 if game.getWinner() == "O":
                     globalCounter += 1
                     return "Win"
@@ -64,7 +66,7 @@ def countWinRate():
 
 
 if __name__ == "__main__":
-    # for i in range(1, 11):
-    #     print str(i) + " " + countWinRate()
-    # print globalCounter / 10.0
-    main()
+    for i in range(1, 11):
+        print str(i) + " " + countWinRate()
+    print globalCounter / 10.0
+    # main()
