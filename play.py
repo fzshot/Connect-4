@@ -43,7 +43,7 @@ def main():
     game = board()
     # humanagent = Human()
     # randomagent = RandomAgent()
-    # alphBetaMinimax = MinimaxAlphaBetaAgent()
+    alphBetaMinimax = MinimaxAlphaBetaAgent()
     # minimax = MinimaxAgent()
     # i =0
     # Inputs to Tie:
@@ -52,9 +52,10 @@ def main():
     while True:
         game.printBoard()
         if game.getTurn() == "X":
-            position = AlphaBeta(game, 2).play()
+            position = Human().play()
         else:
-            position = RandomAgent(game).play()
+
+            position = AlphaBeta(game, 3).play()
         try:
             game = game.dropDisc(int(position))
         except Exception:
@@ -79,13 +80,15 @@ def countWinRate():
     game = board()
     # humanagent = Human()
     # randomagent = RandomAgent()
-    # alphBetaMinimax = MinimaxAlphaBetaAgent()
+    alphBetaMinimax = MinimaxAlphaBetaAgent()
     # minimax = MinimaxAgent()
     while True:
         if game.getTurn() == "X":
-            position = AlphaBeta(game, 2).play()
-        else:
             position = RandomAgent(game).play()
+
+        else:
+            # position = AlphaBeta(game, 2).play()
+            position = MinimaxAlphaBetaAgent().getAction(game)
 
         game = game.dropDisc(int(position))
         if game.isEnd():
@@ -101,7 +104,7 @@ def countWinRate():
 
 
 if __name__ == "__main__":
-    for i in range(1, 11):
-        print str(i) + " " + countWinRate()
-    print globalCounter / 10.0
-    # main()
+    # for i in range(1, 11):
+    #     print str(i) + " " + countWinRate()
+    # print globalCounter / 10.0
+    main()

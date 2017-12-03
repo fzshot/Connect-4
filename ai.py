@@ -1,4 +1,4 @@
-from random import randrange
+from random import randrange, random, shuffle
 from board import *
 from evaluation import Evaluation
 
@@ -109,15 +109,19 @@ class AlphaBeta:
         self.depth = depth
         self.turn = gameState.getTurn()
         self.opponent = gameState.getOpponent()
+        self.order = dict(zip(range(1,8), [0, 2, 4, 8, 5, 3, 1]))
+        self.count = 0
 
     def play(self):
         alpha = -float('inf')
         beta = float('inf')
         position = self.value(self.gameState, self.turn, self.depth, alpha, beta)[1]
         print "AlphaBeta Agent Drops in ", position
+        print "count:", self.count
         return position
 
     def value(self, gameState, turn, depth, alpha, beta):
+        self.count = self.count + 1
         if gameState.isEnd() or depth == 0:
             return Evaluation().evaluationFunction(gameState, turn), "None"
         if turn == self.turn:
@@ -131,6 +135,10 @@ class AlphaBeta:
         bestScore = -float('inf')
 
         actions = gameState.possiblePlace()
+        # if self.count > 7000:
+        #     actions.sort(self.moveOrder)
+        # else:
+        #     shuffle(actions)
         if turn is "X":
             opponent = "O"
         else:
@@ -149,12 +157,25 @@ class AlphaBeta:
 
         return bestScore, bestAction
 
+    def moveOrder(self, x, y):
+        if self.order[x] < self.order[y]:
+            return 1
+        if self.order[x] > self.order[y]:
+            return -1
+        else:
+            return 0
+
     def min_value(self, gameState, turn, depth, alpha, beta):
 
         v = float('inf')
         bestScore = float('inf')
 
         actions = gameState.possiblePlace()
+        # shuffle(actions)
+        # if self.count > 7000:
+        #     actions.sort(self.moveOrder)
+        # else:
+        #     shuffle(actions)
         if turn is "X":
             opponent = "O"
         else:
@@ -251,3 +272,71 @@ class ExpectimaxAgent:
         # return evaluation value of the chosen successor node ,
         # and the action associated to get to that successor state.
         return float(sum(evals)/len(evals)), 'None'
+
+class MinimaxAlphaBetaAgent:
+    def __init__(self, depth=3):
+        self.depth = depth
+        self.begin = True
+        self.count = 0
+        self.order = dict(zip(range(1, 8), [0, 4, 2, 8, 3, 5, 1]))
+
+    def getAction(self, gameState):
+        def moveOrder(x, y):
+            if self.order[x] < self.order[y]:
+                return 1
+            if self.order[x] > self.order[y]:
+                return -1
+            else:
+                return 0
+
+        def maxValue(state, a, b, depth):
+            if state.isEnd() or depth == self.depth:
+                return Evaluation().evaluationFunction(state)
+            v = float('-inf')
+            actions = state.possiblePlace()
+            if self.count > 200:
+                actions.sort(moveOrder)
+            else:
+                shuffle(actions)
+            for action in actions:
+                nextState = state.dropDisc(action)
+                score = minValue(nextState, a, b, depth + 1)
+                v = max(v, score)
+                if v > b:
+                    return v
+                a = max(a, v)
+            return v
+
+        def minValue(state, a, b, depth):
+            self.count = self.count + 1
+            if state.isEnd():
+                return Evaluation().evaluationFunction(state)
+            v = float('inf')
+            actions = state.possiblePlace()
+            if self.count > 200:
+                actions.sort(moveOrder)
+            else:
+                shuffle(actions)
+            for action in actions:
+                nextState = state.dropDisc(action)
+                v = min(v, maxValue(nextState, a, b, depth))
+                if v < a:
+                    return v
+                b = min(b, v)
+            return v
+
+        a = float('-inf')
+        b = float('inf')
+        v = float('-inf')
+        move = dict()
+        for action in gameState.possiblePlace():
+            nextState = gameState.dropDisc(action)
+            score = minValue(nextState, a, b, 1)
+            v = max(v, score)
+            move[score] = action
+            if v > b:
+                return move[v]
+            a = max(a, v)
+        print "abc inserted at ", move[v]
+        print "count",self.count
+        return move[v]

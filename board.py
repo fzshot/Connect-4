@@ -1,5 +1,6 @@
 from copy import deepcopy
 
+
 class board():
     def __init__(self):
         self.scoreTrack = {"X": [], "O": []}

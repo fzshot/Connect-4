@@ -2,7 +2,7 @@ from random import SystemRandom
 
 
 class Evaluation:
-    def evaluationFunction(self, gameState, turn):
+    def evaluationFunction(self, gameState, turn = "X"):
         """ Simple heuristic to evaluate board configurations
             Heuristic is ...
         """
@@ -13,9 +13,9 @@ class Evaluation:
                         [4, 6, 8, 10, 8, 6, 4],
                         [3, 4, 5, 7, 5, 4, 3]]
         if gameState.winner == "X":
-            return 9999999999
+            return -99999999999999999999999999999
         elif gameState.winner == "O":
-            return -999999999
+            return 99999999999999999999999999999
         else:
             scoreX, scoreO = 0, 0
             j = 0
@@ -42,3 +42,4 @@ class Evaluation:
                     i += 1
                 j += 1
             return scoreO - scoreX
+            # return SystemRandom().random()
