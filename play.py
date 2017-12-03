@@ -66,7 +66,7 @@ def countWinRate():
 
 
 if __name__ == "__main__":
-    for i in range(1, 11):
+    for i in range(1, 101):
         print str(i) + " " + countWinRate()
-    print globalCounter / 10.0
+    print globalCounter / 100.0
     # main()

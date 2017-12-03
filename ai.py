@@ -42,7 +42,7 @@ class MinimaxAlphaBetaAgent(GeneralAgents):
         self.depth = depth
         self.begin = True
         GeneralAgents.__init__(self, "AB" + str(depth))
-        self.save = GeneralAgents("AB" + str(depth)).save
+        # self.save = GeneralAgents("AB" + str(depth)).save
         # print ""
 
     def getAction(self, gameState):
@@ -144,7 +144,7 @@ class MinimaxAgent(GeneralAgents):
         self.depth = depth
         self.begin = True
         GeneralAgents.__init__(self, "minimax" + str(depth))
-        self.save = GeneralAgents("minimax" + str(depth)).save
+        # self.save = GeneralAgents("minimax" + str(depth)).save
         # print ""
 
     def getAction(self, gameState):
