@@ -41,12 +41,14 @@ class MinimaxAlphaBetaAgent(GeneralAgents):
     def __init__(self, depth=2):
         self.depth = depth
         self.begin = True
+        self.count = 0
         GeneralAgents.__init__(self, "AB" + str(depth))
         # self.save = GeneralAgents("AB" + str(depth)).save
         # print ""
 
     def getAction(self, gameState):
         def maxValue(state, a, b, depth):
+            self.count += 1
             if state.isEnd() or depth == self.depth:
                 return self.evalFunc(state)
             v = float('-inf')
@@ -60,6 +62,7 @@ class MinimaxAlphaBetaAgent(GeneralAgents):
             return v
 
         def minValue(state, a, b, depth):
+            self.count += 1
             if state.isEnd():
                 return self.evalFunc(state)
             v = float('inf')
@@ -73,6 +76,7 @@ class MinimaxAlphaBetaAgent(GeneralAgents):
 
         currentBoard = gameState.drawBoard
         if currentBoard in self.save:
+            print "Nodes explored: ", self.count
             return self.save[currentBoard]
         else:
             a = float('-inf')
@@ -85,9 +89,11 @@ class MinimaxAlphaBetaAgent(GeneralAgents):
                 v = max(v, score)
                 move[score] = action
                 if v > b:
+                    print "Nodes explored: ", self.count
                     return move[v]
                 a = max(a, v)
             self.save[currentBoard] = move[v]
+            print "Nodes explored: ", self.count
             return move[v]
 
     def getNewState(self, gameState):

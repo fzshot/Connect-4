@@ -1,5 +1,7 @@
+import datetime
 from board import *
 from ai import *
+
 
 globalCounter = 0
 
@@ -10,14 +12,10 @@ def main():
     randomagent = RandomAgent()
     alphBetaMinimax = MinimaxAlphaBetaAgent(3)
     minimax = MinimaxAgent()
-    # i =0
-    # Inputs to Tie:
-    # inputs = [1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 5, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 6, 6,
-    #           6, 7, 7, 7, 7, 7, 7]
     while True:
         game.printBoard()
         if game.getTurn() == "X":
-            position = randomagent.play()
+            position = humanagent.play()
         else:
             position = alphBetaMinimax.getNewState(game)
         try:
@@ -45,15 +43,24 @@ def countWinRate():
     randomagent = RandomAgent()
     alphBetaMinimax = MinimaxAlphaBetaAgent(3)
     minimax = MinimaxAgent()
+    count = 0
+    avg = 0.00
     while True:
         if game.getTurn() == "X":
             position = randomagent.play()
         else:
+            start = datetime.datetime.now()
             position = alphBetaMinimax.getNewState(game)
-
+            end = datetime.datetime.now()
+            elapsed = end - start
+            print "Time taken: ",elapsed.total_seconds(), "secs"
+            avg = avg + elapsed.total_seconds()
+            count = count + 1
         game = game.dropDisc(int(position))
+
         if game.isEnd():
             if game.getWinner() is not None:
+                print "Average Time for a game: ", avg/count
                 alphBetaMinimax.save_obj()
                 if game.getWinner() == "O":
                     globalCounter += 1
@@ -65,8 +72,9 @@ def countWinRate():
             break
 
 
+
 if __name__ == "__main__":
-    for i in range(1, 101):
+    for i in range(1, 11):
         print str(i) + " " + countWinRate()
     print globalCounter / 100.0
     # main()

@@ -32,6 +32,7 @@ class board():
         self.drawBoard = result
 
     def printBoard(self):
+        print "*1*2*3*4*5*6*7*"
         print self.drawBoard
 
     def dropDisc(self, column):
