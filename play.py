@@ -10,7 +10,7 @@ def main():
     game = board()
     humanagent = Human()
     randomagent = RandomAgent()
-    alphBetaMinimax = MinimaxAlphaBetaAgent(3)
+    alphBetaMinimax = MinimaxAlphaBetaAgent(2)
     minimax = MinimaxAgent()
     while True:
         game.printBoard()

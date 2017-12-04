@@ -97,11 +97,11 @@ class MinimaxAlphaBetaAgent(GeneralAgents):
             return move[v]
 
     def getNewState(self, gameState):
-        if self.begin:
-            posisions = 4
-            self.begin = False
-        else:
-            posisions = self.getAction(gameState)
+        # if self.begin:
+        #     posisions = 4
+        #     self.begin = False
+        # else:
+        posisions = self.getAction(gameState)
         print "Minimax AB Agent: inserted at", posisions
         return posisions
 
@@ -194,12 +194,12 @@ class MinimaxAgent(GeneralAgents):
             return minimax(gameState, 1)
 
     def getNewState(self, gameState):
-        if self.begin:
-            posisions = 4
-            self.begin = False
-        else:
-            posisions = self.getAction(gameState)
-            print "Minimax Agent: inserted at", posisions
+        # if self.begin:
+        #     posisions = 4
+        #     self.begin = False
+        # else:
+        posisions = self.getAction(gameState)
+        print "Minimax Agent: inserted at", posisions
         return posisions
 
     def evalFunc(self, gameState, player=None):
@@ -210,9 +210,9 @@ class MinimaxAgent(GeneralAgents):
                         [4, 6, 8, 10, 8, 6, 4],
                         [3, 4, 5, 7, 5, 4, 3]]
         if gameState.winner == "X":
-            return float('inf')
-        elif gameState.winner == "O":
             return float('-inf')
+        elif gameState.winner == "O":
+            return float('inf')
         else:
             scoreX, scoreO = 0, 0
             j = 0
