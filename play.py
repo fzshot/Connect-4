@@ -41,7 +41,7 @@ def countWinRate():
     game = board()
     humanagent = Human()
     randomagent = RandomAgent()
-    alphBetaMinimax = MinimaxAlphaBetaAgent(3)
+    alphBetaMinimax = MinimaxAlphaBetaAgent(2)
     minimax = MinimaxAgent()
     count = 0
     avg = 0.00
@@ -74,7 +74,7 @@ def countWinRate():
 
 
 if __name__ == "__main__":
-    for i in range(1, 11):
+    for i in range(1, 501):
         print str(i) + " " + countWinRate()
-    print globalCounter / 100.0
+    print globalCounter / 500.0
     # main()
