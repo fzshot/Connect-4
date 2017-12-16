@@ -1,44 +1,42 @@
 import datetime
-from board import *
+from gameboard import *
 from ai import *
-
 
 globalCounter = 0
 
 
 def main():
-    game = board()
+    game = GameBoard()
     humanagent = Human()
     randomagent = RandomAgent()
     alphBetaMinimax = MinimaxAlphaBetaAgent(2)
     minimax = MinimaxAgent()
     while True:
-        game.printBoard()
-        if game.getTurn() == "X":
+        game.print_board()
+        if game.get_turn() == "X":
             position = humanagent.play()
         else:
-            position = alphBetaMinimax.getNewState(game)
+            position = alphBetaMinimax.get_new_state(game)
         try:
             game = game.dropDisc(int(position))
         except Exception:
             pass
         else:
-            # i=i+1
-            if game.isEnd():
-                if game.getWinner() is not None:
-                    game.printBoard()
+            if game.is_end():
+                if game.get_winner() is not None:
+                    game.print_board()
                     alphBetaMinimax.save_obj()
-                    print "Winner is: ", game.getWinner()
+                    print("Winner is: ", game.get_winner())
                 else:
-                    game.printBoard()
-                    print "Game Tied! No Winner"
+                    game.print_board()
+                    print("Game Tied! No Winner")
                 break
-    print "Good Bye"
+    print("Good Bye")
 
 
-def countWinRate():
+def count_win_rate():
     global globalCounter
-    game = board()
+    game = GameBoard()
     humanagent = Human()
     randomagent = RandomAgent()
     alphBetaMinimax = MinimaxAlphaBetaAgent(2)
@@ -46,35 +44,34 @@ def countWinRate():
     count = 0
     avg = 0.00
     while True:
-        if game.getTurn() == "X":
+        if game.get_turn() == "X":
             position = randomagent.play()
         else:
             start = datetime.datetime.now()
-            position = alphBetaMinimax.getNewState(game)
+            position = alphBetaMinimax.get_new_state(game)
             end = datetime.datetime.now()
             elapsed = end - start
-            print "Time taken: ",elapsed.total_seconds(), "secs"
+            print("Time taken: ", elapsed.total_seconds(), "secs")
             avg = avg + elapsed.total_seconds()
             count = count + 1
         game = game.dropDisc(int(position))
 
-        if game.isEnd():
-            if game.getWinner() is not None:
-                print "Average Time for a game: ", avg/count
+        if game.is_end():
+            if game.get_winner() is not None:
+                print("Average Time for a game: ", avg / count)
                 alphBetaMinimax.save_obj()
-                if game.getWinner() == "O":
+                if game.get_winner() == "O":
                     globalCounter += 1
                     return "Win"
-                elif game.getWinner() == "X":
+                elif game.get_winner() == "X":
                     return "Loss"
                 else:
                     return "Tied"
             break
 
 
-
 if __name__ == "__main__":
     for i in range(1, 501):
-        print str(i) + " " + countWinRate()
-    print globalCounter / 500.0
+        print(str(i) + " " + count_win_rate())
+    print(globalCounter / 500.0)
     # main()
